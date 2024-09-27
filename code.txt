@@ -1,0 +1,145 @@
+#include <Servo.h>
+#include <AFMotor.h>
+
+#define Echo A0
+#define Trig A1
+#define motor 10
+#define Speed 100
+#define spoint 103
+
+char value;
+int distance;
+int Left;
+int Right;
+int L = 0;
+int R = 0;
+int L1 = 0;
+int R1 = 0;
+bool aut;
+Servo servo;
+AF_DCMotor M1(1);
+AF_DCMotor M2(2);
+
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(Trig, OUTPUT);
+  pinMode(Echo, INPUT);
+  servo.attach(motor);
+  M1.setSpeed(Speed);
+  M2.setSpeed(Speed);
+  aut=0;
+
+}
+void loop() {
+  
+  Bluetoothcontrol();
+  
+}
+
+void Bluetoothcontrol() {
+  if (Serial.available() > 0) {
+    value = Serial.read();
+    if(value=='W') aut=1;
+    else if(value=='w') aut=0;
+    Serial.println(value);
+  }
+  if(!aut){
+  if (value == 'F') {
+    forward();
+  } else if (value == 'B') {
+    backward();
+  } else if (value == 'L') {
+    left();
+  } else if (value == 'R') {
+    right();
+  } else if (value == 'S') {
+    Stop();
+  }
+  }
+  else
+{
+
+       Obstacle();
+}
+
+}
+
+void Obstacle() {
+  distance = ultrasonic();
+  if (distance <= 20) {
+    Stop();
+    backward();
+    delay(100);
+    Stop();
+    L = leftsee();
+    servo.write(spoint);
+    delay(800);
+    R = rightsee();
+    servo.write(spoint);
+    if (L < R) {
+      right();
+      delay(500);
+      Stop();
+      delay(200);
+    } else if (L > R) {
+      left();
+      delay(500);
+      Stop();
+      delay(200);
+    }
+  } else {
+    forward();
+  }
+
+}
+
+int ultrasonic() {
+  digitalWrite(Trig, LOW);
+  delayMicroseconds(4);
+  digitalWrite(Trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(Trig, LOW);
+  long t = pulseIn(Echo, HIGH);
+  long cm = t / 29 / 2; //time convert distance
+  return cm;
+}
+
+void forward() {
+  M1.run(FORWARD);
+  M2.run(FORWARD);
+
+}
+void backward() {
+  M1.run(BACKWARD);
+  M2.run(BACKWARD);
+ 
+}
+void right() {
+  M1.run(BACKWARD);
+  M2.run(FORWARD);
+
+}
+void left() {
+  M1.run(FORWARD);
+  M2.run(BACKWARD);
+
+}
+void Stop() {
+  M1.run(RELEASE);
+  M2.run(RELEASE);
+ 
+}
+int rightsee() {
+  servo.write(20);
+  delay(800);
+  Left = ultrasonic();
+  return Left;
+}
+
+int leftsee() {
+  servo.write(180);
+  delay(800);
+  Right = ultrasonic();
+  return Right;
+}
