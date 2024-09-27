@@ -1,7 +1,7 @@
-# Smart Vacuum Cleaner
+# Autonomous Vacuum Robot
 
 ## Description
-The **Smart Vacuum Cleaner** is an IoT-based robot designed to automate the cleaning process using advanced sensors and a motor-driven propulsion system. It features ultrasonic sensors for obstacle detection and avoidance, a Bluetooth module for remote control, and is powered by an Arduino microcontroller. This system minimizes human intervention and maximizes cleaning efficiency across various environments.
+This is an IoT-based robot designed to automate the cleaning process using advanced sensors and a motor-driven propulsion system. It features ultrasonic sensors for obstacle detection and avoidance, a Bluetooth module for remote control, and is powered by an Arduino microcontroller. This system minimizes human intervention and maximizes cleaning efficiency across various environments.
 
 ## Features
 - **Ultrasonic Sensor**: For real-time obstacle detection and avoidance.
